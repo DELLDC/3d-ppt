@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>عرض ثلاثي الأبعاد عن السيارات</title>
+    <style>
+        body { margin: 0; font-family: Arial, sans-serif; background: #000; color: white; overflow: hidden; }
+        #container { width: 100vw; height: 100vh; position: relative; }
+        #info { position: absolute; top: 20px; left: 20px; background: rgba(0,0,0,0.7); padding: 10px; border-radius: 5px; max-width: 300px; }
+        button { position: absolute; bottom: 20px; right: 20px; padding: 10px; background: #007bff; color: white; border: none; cursor: pointer; }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+</head>
+<body>
+    <div id="container"></div>
+    <div id="info">
+        <h2>شريحة 1: مقدمة</h2>
+        <p>السيارات هي وسيلة نقل آلية تغيرت العالم. هناك أكثر من 1.4 مليار سيارة في العالم.</p>
+    </div>
+    <button onclick="nextSlide()">التالي</button>
+
+    <script>
+        const slides = [
+            { title: "شريحة 1: مقدمة", text: "السيارات هي وسيلة نقل آلية تغيرت العالم. هناك أكثر من 1.4 مليار سيارة في العالم." },
+            { title: "شريحة 2: التاريخ", text: "بدأت مع كارل بنز في 1885، ثم هنري فورد وخط الإنتاج في 1913." },
+            { title: "شريحة 3: التطور", text: "من محركات البنزين إلى الكهربائية مثل تسلا." },
+            { title: "شريحة 4: الأنواع", text: "سيدان، رياضية، SUV، وغيرها." },
+            { title: "شريحة 5: الخاتمة", text: "المستقبل: سيارات ذاتية القيادة وصديقة للبيئة." }
+        ];
+
+        let currentSlide = 0;
+        const infoDiv = document.getElementById('info');
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            infoDiv.innerHTML = `<h2>${slides[currentSlide].title}</h2><p>${slides[currentSlide].text}</p>`;
+        }
+
+        // إعداد مشهد Three.js
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('container').appendChild(renderer.domElement);
+
+        // إضافة سيارة بسيطة (مكعب كتمثيل)
+        const geometry = new THREE.BoxGeometry(2, 1, 4);
+        const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+        const car = new THREE.Mesh(geometry, material);
+        scene.add(car);
+
+        camera.position.z = 5;
+
+        function animate() {
+            requestAnimationFrame(animate);
+            car.rotation.y += 0.01; // دوران بسيط
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // تعديل الحجم عند تغيير النافذة
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>
